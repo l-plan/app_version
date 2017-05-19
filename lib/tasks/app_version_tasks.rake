@@ -25,6 +25,9 @@ namespace :app do
   end
 
   namespace :bump do 
+
+    str = Proc.new {|line|  nr = (line.match(/[0-9]+/).to_s.to_i+1).to_s ; line.sub(/.{5}\z/, nr.tap{|x| x.prepend(' ') while nr.size < 5} )}
+
     desc 'bump patch'
     task :patch do
       # template = File.read(Rails.root.to_s+ "/lib/templates/version.yml.erb")
@@ -32,9 +35,11 @@ namespace :app do
       path = Rails.root.join( "lib", "templates", "version.yml.erb" ) 
       # lines.each{|x| p x if x=~ /patch:/}
 
-      str = Proc.new { |nr| ((nr.to_i+1).to_s  ).prepend('     ')[-nr.size, nr.size] }
+      # str = Proc.new { |nr| ((nr.to_i+1).to_s  ).prepend('     ')[-nr.size, nr.size] }
 
-      File.write(f = path, File.read(f).sub(/patch:.+[0-9]/)  {|x| x+'rolf'})
+      # str = Proc.new {|line|  nr = (line.match(/[0-9]+/).to_s.to_i+1).to_s ; line.sub(/.{5}\z/, nr.tap{|x| x.prepend(' ') while nr.size < 5} )}
+
+      File.write(f = path, File.read(f).sub(/^patch:.+[0-9]/)  {|x| str.call x})
 
       # File.open(path, 'r+') do |file|
       #   file.each_line do |line|
