@@ -23,38 +23,44 @@ namespace :app do
     result   = ERB.new(template).result(binding)
     File.open(Rails.root.to_s+ "/config/version.yml", 'w') { |f| f.write(result)}
   end
+  
+
+  desc "bumps patch if no argument given"
+  task bump: ["bump:patch"]
 
   namespace :bump do 
 
-    str = Proc.new {|line|  nr = (line.match(/[0-9]+/).to_s.to_i+1).to_s ; line.sub(/.{5}\z/, nr.tap{|x| x.prepend(' ') while nr.size < 5} )}
+    str = Proc.new {|line, nr|  nr ||= (line.match(/[0-9]+/).to_s.to_i+1).to_s ; line.sub(/.{3}\z/, nr.tap{|x| x.prepend(' ') while nr.size < 3} )}
+    path = Rails.root.join( "lib", "templates", "version.yml.erb" ) 
+
 
     desc 'bump patch'
-    task :patch do
-      # template = File.read(Rails.root.to_s+ "/lib/templates/version.yml.erb")
-      # puts "inside...."
-      path = Rails.root.join( "lib", "templates", "version.yml.erb" ) 
-      # lines.each{|x| p x if x=~ /patch:/}
-
-      # str = Proc.new { |nr| ((nr.to_i+1).to_s  ).prepend('     ')[-nr.size, nr.size] }
-
-      # str = Proc.new {|line|  nr = (line.match(/[0-9]+/).to_s.to_i+1).to_s ; line.sub(/.{5}\z/, nr.tap{|x| x.prepend(' ') while nr.size < 5} )}
-
+    task :patch do   
       File.write(f = path, File.read(f).sub(/^patch:.+[0-9]/)  {|x| str.call x})
+      Rake::Task["app:render"].invoke
+    end
 
-      # File.open(path, 'r+') do |file|
-      #   file.each_line do |line|
-      #     # puts line if line =~ /patch:/
-      #     line = 'rolf'#(line.sub(/...[0-9]/) {|x| str.call x} )if line =~ /patch:/
-          
+    desc 'bump minor'
+    task :minor do
+      File.write(f = path, File.read(f).sub(/^minor:.+[0-9]/)  {|x| str.call x})
+      File.write(f = path, File.read(f).sub(/^patch:.+[0-9]/)  {|x| str.call x, "0"})
+      Rake::Task["app:render"].invoke
+    end
 
-      #     file.write line # if line =~ /patch:/
-
-
-      #   end
-      # end
-
+    desc 'bump major'
+    task :major do
+      File.write(f = path, File.read(f).sub(/^major:.+[0-9]/)  {|x| str.call x})
+      File.write(f = path, File.read(f).sub(/^minor:.+[0-9]/)  {|x| str.call x, "0"})
+      File.write(f = path, File.read(f).sub(/^patch:.+[0-9]/)  {|x| str.call x, "0"})
+      Rake::Task["app:render"].invoke
     end
   end
 
+  desc "creates a git tag from current version and pushes to git"
+  task :tag do 
+    
+      tag = Proc.new {|x| "v"+[x.major, x.minor, x.patch, x.meta].compact.join('.') }
+      # puts tag.call App::Version.load( Rails.root.join('config/version.yml') )
+  end
 
 end

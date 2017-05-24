@@ -1,0 +1,9 @@
+major:        4
+minor:        5
+patch:        6
+# meta:		  rc.7
+# milestone:  4
+build:      <%= `git rev-list HEAD|wc -l`.strip %>
+<%#branch:     <%# branch %>
+committer:  <%= `git show -s --pretty=format:"%an"` %>
+build_date: <%= Date.today.to_s %>

@@ -17,5 +17,7 @@ gem "jquery-rails"
 
 # To use debugger
 # gem 'debugger'
+gem 'byebug'
 
 gem "codeclimate-test-reporter", group: :test, require: nil
+gem 'rails'
