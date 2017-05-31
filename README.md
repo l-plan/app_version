@@ -1,22 +1,7 @@
 ## App Version
+this is a fork from app_version: https://github.com/mort666/app_version
 
-[![CircleCI](https://circleci.com/gh/mort666/app_version.svg?style=svg)](https://circleci.com/gh/mort666/app_version)
-
-This is a simple plugin that makes it easy to manage the version number of your Rails application. The version numbers supported by this plugin look like '2.0.0-rc.1 M4 (600) of branch by coder on 2008-10-27'.
-
-The components of the version number are:
-
-  	2          => major
-  	0          => minor
-  	0          => patch
-    rc.1       => meta information (as defined by Semantic Versioning)
-  	M4         => milestone
-  	(600)      => build number (usually Subversion revision)
- 	branch     => the name of the branch this version is from.
- 	coder      => the name of the user that made the release
-  	2008-10-27 => the date of the release
-
-Only the major and minor numbers are required. The rest can be omitted and the plugin will attempt to do the right thing.
+this gem adds a few rake-tasks tot give the version a bump.
 
 ### Install
 
