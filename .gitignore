@@ -18,6 +18,6 @@
 
 # spec results
 rspec.xml
-
+# removed from repo:
 .DS_Store
 .byebug_history
