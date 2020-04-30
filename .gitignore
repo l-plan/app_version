@@ -18,3 +18,6 @@
 
 # spec results
 rspec.xml
+
+.DS_Store
+.byebug_history
