@@ -61,8 +61,9 @@ namespace :app do
     desc "creates a git tag from current version and pushes to git"
     task :tag do 
       
-        tag = Proc.new {|x| "v"+[x.major, x.minor, x.patch, x.meta].compact.join('.') }
-        # puts tag.call App::Version.load( Rails.root.join('config/version.yml') )
+        tagging = Proc.new {|x| "v"+[x.major, x.minor, x.patch, x.meta].compact.join('.') }
+        tag = tagging.call App::Version.load( Rails.root.join('config/version.yml') )
+        `git tag -a "#{tag}" -m "app:versioning #{tag}" `
     end
 
   end
