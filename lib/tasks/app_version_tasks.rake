@@ -2,7 +2,7 @@ namespace :app do
   require 'erb'
 
   desc 'Report the application version.'
-  task :version do
+  task :versioning do
     require File.join(File.dirname(__FILE__), "../app_version.rb")
     puts "Application version: " << App::Version.load("#{Rails.root.to_s}/config/version.yml").to_s
   end
@@ -16,7 +16,7 @@ namespace :app do
   # task :uninstall do
   #   require File.join(File.dirname(__FILE__), "../uninstall.rb")
   # end
-
+  namespace :versioning do
   desc 'Render the version.yml from its template.'
   task :render do
     template = File.read(Rails.root.to_s+ "/lib/templates/version.yml.erb")
@@ -25,7 +25,7 @@ namespace :app do
   end
   
 
-  namespace :version do
+
 
     desc "bumps patch if no argument given"
     task bump: ["bump:patch"]
@@ -39,14 +39,14 @@ namespace :app do
       desc 'bump patch'
       task :patch do   
         File.write(f = path, File.read(f).sub(/^patch:.+[0-9]/)  {|x| str.call x})
-        Rake::Task["app:render"].invoke
+        Rake::Task["app:versioning:render"].invoke
       end
 
       desc 'bump minor'
       task :minor do
         File.write(f = path, File.read(f).sub(/^minor:.+[0-9]/)  {|x| str.call x})
         File.write(f = path, File.read(f).sub(/^patch:.+[0-9]/)  {|x| str.call x, "0"})
-        Rake::Task["app:render"].invoke
+        Rake::Task["app:versioning:render"].invoke
       end
 
       desc 'bump major'
@@ -54,7 +54,7 @@ namespace :app do
         File.write(f = path, File.read(f).sub(/^major:.+[0-9]/)  {|x| str.call x})
         File.write(f = path, File.read(f).sub(/^minor:.+[0-9]/)  {|x| str.call x, "0"})
         File.write(f = path, File.read(f).sub(/^patch:.+[0-9]/)  {|x| str.call x, "0"})
-        Rake::Task["app:render"].invoke
+        Rake::Task["app:versioning:render"].invoke
       end
     end
 

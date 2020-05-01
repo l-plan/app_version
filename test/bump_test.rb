@@ -9,6 +9,7 @@ class App::Version::BumpTest < ActiveSupport::TestCase
 	def setup
 		source = FileUtils.pwd << '/test/test_source_files/'
 		FileUtils.cp(source+'test_version.yml.erb', Rails.root.join( "lib", "templates", "version.yml.erb") )
+		FileUtils.cp(source+'test_version.yml', Rails.root.join( "config", "version.yml") )
 	end
 
 	def teardown
@@ -19,7 +20,7 @@ class App::Version::BumpTest < ActiveSupport::TestCase
 	
 	def test_bump_without_args
 		Dir.chdir(Rails.root) do
-			`Rake app:version:bump`
+			`Rake app:versioning:bump`
 		end
 	
 		assert_equal  "7", App::Version.load( Rails.root.join('config/version.yml') ).patch
@@ -28,7 +29,7 @@ class App::Version::BumpTest < ActiveSupport::TestCase
 	
 	def test_bump_patch
 		Dir.chdir(Rails.root) do
-			`Rake app:version:bump:patch`
+			`Rake app:versioning:bump:patch`
 		end
 
 		assert_equal  "7", App::Version.load( Rails.root.join('config/version.yml') ).patch
@@ -37,7 +38,7 @@ class App::Version::BumpTest < ActiveSupport::TestCase
 
 	def test_bump_minor
 		Dir.chdir(Rails.root) do
-			`Rake app:version:bump:minor`
+			`Rake app:versioning:bump:minor`
 		end
 
 		assert_equal  "6", App::Version.load( Rails.root.join('config/version.yml') ).minor
@@ -46,7 +47,7 @@ class App::Version::BumpTest < ActiveSupport::TestCase
 
 	def test_bump_major
 		Dir.chdir(Rails.root) do
-			`Rake app:version:bump:major`
+			`Rake app:versioning:bump:major`
 		end
 		
 		assert_equal  "5", App::Version.load( Rails.root.join('config/version.yml') ).major
