@@ -1,8 +1,9 @@
 require 'test_helper'
 
-class AppVersionTest < MiniTest::Test
+class App::Version::Test < ActiveSupport::TestCase
 
-  def setup
+
+def setup
     @version = App::Version.new
     @version.major = '1'
     @version.minor = '2'
@@ -12,7 +13,11 @@ class AppVersionTest < MiniTest::Test
     @version.build = '500'
     @version.branch = 'master'
     @version.committer = 'coder'
-    @version.build_date = Date.civil(2008, 10, 27)
+    @version.build_date = Time.new(2008, 10, 27)
+  end
+
+  test "truth" do
+    assert_kind_of Module, AppVersion
   end
 
   def test_load_from_file
@@ -21,7 +26,7 @@ class AppVersionTest < MiniTest::Test
   end
 
   def test_create_from_string
-    version = App::Version.parse '1.2.3-rc.1 M4 (500) of master by coder on 2008-10-27'
+    version = App::Version.parse '1.2.3-rc.1 M4 (500) of master by coder on 2008-10-27 00:00:00 +0100'
     assert_equal @version, version
 
     version = App::Version.parse '1.2.3-rc.1 M4 (500)'
@@ -62,7 +67,7 @@ class AppVersionTest < MiniTest::Test
     @version.build_date = nil
     assert_equal @version, version
 
-    version = App::Version.parse '2007.200.10 M9 (6) of branch by coder on 2008-10-27'
+    version = App::Version.parse '2007.200.10 M9 (6) of branch by coder on 2008-10-27 00:00:00 +0100'
     @version.major = 2007
     @version.minor = 200
     @version.patch = 10
@@ -71,7 +76,7 @@ class AppVersionTest < MiniTest::Test
     @version.branch = 'branch'
     @version.committer = 'coder'
     @version.meta = nil
-    @version.build_date = Date.civil(2008, 10, 31)
+    @version.build_date = Time.new(2008, 10, 31)
     assert_raises(ArgumentError) { App::Version.parse 'This is not a valid version' }
   end
 
@@ -84,7 +89,7 @@ class AppVersionTest < MiniTest::Test
                               :build => 500,
                               :branch => 'master',
                               :committer => 'coder',
-                              :build_date => Date.civil(2008, 10, 27)
+                              :build_date => Time.new(2008, 10, 27)
     assert_equal @version, version
   end
 
@@ -97,7 +102,7 @@ class AppVersionTest < MiniTest::Test
                               'build' => 500,
                               'branch' => 'master',
                               'committer' => 'coder',
-                              'build_date' => '2008-10-27'
+                              'build_date' => '2008-10-27 00:00:00 +0100'
     assert_equal @version, version
   end
 
@@ -110,7 +115,7 @@ class AppVersionTest < MiniTest::Test
                               :build => '500',
                               :branch => 'master',
                               :committer => 'coder',
-                              :build_date => '2008-10-27'
+                              :build_date => '2008-10-27 00:00:00 +0100'
     assert_equal @version, version
   end
 
@@ -123,7 +128,7 @@ class AppVersionTest < MiniTest::Test
                               'build' => '500',
                               'branch' => 'master',
                               'committer' => 'coder',
-                              'build_date' => '2008-10-27'
+                              'build_date' => '2008-10-27 00:00:00 +0100'
     assert_equal @version, version
   end
 
@@ -187,11 +192,11 @@ class AppVersionTest < MiniTest::Test
                               :committer => nil,
                               :build_date => nil
 
-    assert_equal nil, version.patch
-    assert_equal nil, version.milestone
-    assert_equal nil, version.branch
-    assert_equal nil, version.committer
-    assert_equal nil, version.build_date
+    assert_nil version.patch
+    assert_nil version.milestone
+    assert_nil version.branch
+    assert_nil version.committer
+    assert_nil version.build_date
   end
 
   def test_create_with_empty_string
@@ -204,46 +209,46 @@ class AppVersionTest < MiniTest::Test
                               :committer => '',
                               :build_date => ''
 
-    assert_equal nil, version.patch
-    assert_equal nil, version.milestone
-    assert_equal nil, version.branch
-    assert_equal nil, version.committer
-    assert_equal nil, version.build_date
+    assert_nil version.patch
+    assert_nil version.milestone
+    assert_nil version.branch
+    assert_nil version.committer
+    assert_nil version.build_date
   end
 
   def test_to_s
-    assert_equal '1.2.3-rc.1 M4 (500) of master by coder on 2008-10-27', @version.to_s
+    assert_equal '1.2.3-rc.1 M4 (500) of master by coder on 2008-10-27 00:00:00 +0100', @version.to_s
   end
 
   def test_to_s_with_no_milestone
     @version.milestone = nil
-    assert_equal '1.2.3-rc.1 (500) of master by coder on 2008-10-27', @version.to_s
+    assert_equal '1.2.3-rc.1 (500) of master by coder on 2008-10-27 00:00:00 +0100', @version.to_s
   end
 
   def test_to_s_with_no_build
     @version.build = nil
-    assert_equal '1.2.3-rc.1 M4 of master by coder on 2008-10-27', @version.to_s
+    assert_equal '1.2.3-rc.1 M4 of master by coder on 2008-10-27 00:00:00 +0100', @version.to_s
   end
 
   def test_to_s_with_no_patch
     @version.patch = nil
-    assert_equal '1.2-rc.1 M4 (500) of master by coder on 2008-10-27', @version.to_s
+    assert_equal '1.2-rc.1 M4 (500) of master by coder on 2008-10-27 00:00:00 +0100', @version.to_s
   end
 
   def test_to_s_with_no_build_or_milestone
     @version.milestone = nil
     @version.build = nil
-    assert_equal '1.2.3-rc.1 of master by coder on 2008-10-27', @version.to_s
+    assert_equal '1.2.3-rc.1 of master by coder on 2008-10-27 00:00:00 +0100', @version.to_s
   end
 
   def test_to_s_with_no_branch
     @version.branch = nil
-    assert_equal '1.2.3-rc.1 M4 (500) by coder on 2008-10-27', @version.to_s
+    assert_equal '1.2.3-rc.1 M4 (500) by coder on 2008-10-27 00:00:00 +0100', @version.to_s
   end
 
   def test_to_s_with_no_committer
     @version.committer = nil
-    assert_equal '1.2.3-rc.1 M4 (500) of master on 2008-10-27', @version.to_s
+    assert_equal '1.2.3-rc.1 M4 (500) of master on 2008-10-27 00:00:00 +0100', @version.to_s
   end
 
   def test_to_s_with_no_build_date
@@ -254,7 +259,7 @@ class AppVersionTest < MiniTest::Test
   def test_to_s_with_no_branch_or_committer
     @version.branch = nil
     @version.committer = nil
-    assert_equal '1.2.3-rc.1 M4 (500) on 2008-10-27', @version.to_s
+    assert_equal '1.2.3-rc.1 M4 (500) on 2008-10-27 00:00:00 +0100', @version.to_s
   end
 
   def test_to_s_with_no_committer_or_build_date
@@ -327,6 +332,5 @@ class AppVersionTest < MiniTest::Test
 
     assert_equal '1.2.3-rc.1+20161231', @version.to_s
   end
-
-
 end
+
