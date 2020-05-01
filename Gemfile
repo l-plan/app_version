@@ -1,13 +1,9 @@
-source "http://rubygems.org"
+source "https://rubygems.org"
 
-# Declare your gem's dependencies in pdf_report.gemspec.
-# Bundler will treat runtime dependencies like base dependencies, and
-# development dependencies will be added by default to the :development group.
+# Specify your gem's dependencies in capistrano-versioning.gemspec
 gemspec
 
-gem 'minitest'
 
-# jquery-rails is used by the dummy application
 gem "jquery-rails"
 
 # Declare any dependencies that are still in development here instead of in
@@ -17,7 +13,7 @@ gem "jquery-rails"
 
 # To use debugger
 # gem 'debugger'
-gem 'byebug'
+# gem 'byebug'
 
-gem "codeclimate-test-reporter", group: :test, require: nil
-gem 'rails'
+# gem "codeclimate-test-reporter", group: :test, require: nil
+# gem 'rails'
