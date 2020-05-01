@@ -62,7 +62,8 @@ module App
                    else
                      args[:build_date].to_s
                    end
-          @build_date = Date.parse(b_date)
+          # @build_date = Date.parse(b_date)
+          @build_date = Time.parse(b_date)
         end
 
         @build = case args[:build]
@@ -100,7 +101,7 @@ module App
                                  committer: m[8]
 
       if m[9] && m[9] != ''
-        date = Date.parse(m[9])
+        date = Time.parse(m[9])
         version.build_date = date
       end
 
@@ -161,12 +162,12 @@ module App
         str << " of #{branch}" unless branch.blank?
         str << " by #{committer}" unless committer.blank?
         str << " on #{build_date}" unless build_date.blank?
+        # str << " on #{build_date.strftime('%d %b %Y %H:%M')}" unless build_date.blank?
       end
       str
     end
 
-    private
-
+ 
     def get_build_from_subversion
       if File.exist?('.svn')
         # YAML.parse(`svn info`)['Revision'].value
@@ -181,7 +182,8 @@ module App
 
     def get_revdate_from_git
       if File.exist?('.git')
-        `git show --date=short --pretty=format:%cd|head -n1`.strip
+        # `git show --date=short --pretty=format:%cd|head -n1`.strip
+        `git show --date=short --pretty=format:%ai|head -n1`.strip
       end
     end
 
