@@ -9,8 +9,20 @@ To install include in your Gemfile and execute bundler install
 
 	gem 'app_version'
 
-Will then have the rake tasks below available.
+then:
 
+rails generate app_version:install
+
+- initializer
+
+- version.yml
+
+- version.yml.erb
+
+- app_version.cap
+
+
+## initializer
 To include the version information into your running application create an initialiser within the config directory of the rails application that includes.
 
 	if defined?(Rails.root.to_s) && File.exists?("#{(Rails.root.to_s)}/config/version.yml")
@@ -22,6 +34,18 @@ This will load a constant called APP_VERSION That includes the version informati
 	APP_VERSION.to_s
 
 Use this within your application view or helper methods, more detail on other version meta data in the usage section.
+
+## version.yml
+
+## version.yml.erb
+
+## app_version.cap
+
+
+to remove:
+
+rails generate app_version:uninstall
+
 
 ### Usage
 
@@ -36,7 +60,7 @@ following format:
   	build:     git-revcount
   	branch:    master
   	committer: coder
-  	build_date: 2008-10-27
+  	build_date: 2008-10-27 17:07:59 +0200
 
 If the milestone or patch fields are less than 0 then they will not show up in the version string. The build field can be a build number or one of the following strings: svn, git-hash or git-revcount. If it is a number then that number will be used as the build number, if it is one of the special strings then the plugin will attempt to query the source control system for the build number. The build date field can be a date or the following string: git-revdate.
 
@@ -53,9 +77,9 @@ There is a default format and a "semantic versioning" format to use.  The semant
 
 ### Capistrano Usage
 
-When the app_version plugin is installed, it copies a templated edition of the version.yml file into /lib/templates/version.yml.erb, the initial file shows a tag for retrieving the revision count with git. It also shows displaying the branch as specified with "set :branch" in your capistrano deploy.rb, see the comments in the erb file for more nifty tricks.
+When the app_version plugin is installed, it copies a templated edition of the version.yml file into /lib/templates/version.yml.erb, the initial file shows a tag for retrieving the revision count with git. It also displays the branch, retrieved from the current git repo see the comments in the erb file for more nifty tricks.
 
-When you do a cap deploy, there is a capistrano recipe built-in to the app_version plugin, which will render the templated version.yml into the standard location as mentioned above. This happens automatically after the deploy is done.
+When you do a cap deploy, there is a capistrano task built-in to the app_version gem, which will render the templated version.yml into the standard location as mentioned above. This happens automatically after the deploy is done.
 
 Both the standard and extended capistrano usage can co-exist in the same project the dynamic rendering of the version.yml only happens when using capistrano to deploy your app.
 
@@ -63,12 +87,7 @@ Both the standard and extended capistrano usage can co-exist in the same project
 
 ### Rake tasks
 
-This plugin includes 4 new rake tasks:
-
-	rake app:install    - will copy the version.yml and version.yml.erb into more user
-  	                    accessible locations (/config, and /lib/templates)
-
-	rake app:uninstall  - will remove the files copied in the install task
+This plugin includes a few new rake tasks:
 
 	rake app:render     - will render the erb template into /config/version.yml
     	                  in case you want to have dynamic values updated via a rake task.
@@ -77,6 +96,15 @@ This plugin includes 4 new rake tasks:
 	rake app:version    - will output the version number of the current rails
                     	  application.
 
+
+  rake app:version:bump    - default, will perform bump patch
+
+  rake app:version:bump:patch    - increase version patch with 1
+
+  rake app:version:bump:minor    - increase version minor with 1, set patch to 0
+
+  rake app:version:bump:major    - increase version major with 1, set minor and patch to 0
+                        
 ## License
 
 This plugin is released under the terms of the Ruby license. See
