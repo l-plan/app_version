@@ -7,15 +7,15 @@ namespace :app do
     puts "Application version: " << App::Version.load("#{Rails.root.to_s}/config/version.yml").to_s
   end
 
-  desc 'Configure for initial install.'
-  task :install do
-    require File.join(File.dirname(__FILE__), "../install.rb")
-  end
+  # desc 'Configure for initial install.'
+  # task :install do
+  #   require File.join(File.dirname(__FILE__), "../install.rb")
+  # end
 
-  desc 'Clean up prior to removal.'
-  task :uninstall do
-    require File.join(File.dirname(__FILE__), "../uninstall.rb")
-  end
+  # desc 'Clean up prior to removal.'
+  # task :uninstall do
+  #   require File.join(File.dirname(__FILE__), "../uninstall.rb")
+  # end
 
   desc 'Render the version.yml from its template.'
   task :render do
