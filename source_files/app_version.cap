@@ -1,0 +1,17 @@
+namespace :app_version do
+
+  desc "Generate version.yml from variables"
+  task :generate_version_info do
+    if File.exist?("lib/templates/version.yml.erb")
+      template = File.read("lib/templates/version.yml.erb")
+      result   = ERB.new(template).result(binding)
+      File.write('config/version.yml',result) 
+
+      on roles(:app) do
+        upload! 'config/version.yml', "#{release_path.to_s.downcase}/config"
+      end
+    end
+  end
+  after "deploy:symlink:release", "app_version:generate_version_info"
+
+end
