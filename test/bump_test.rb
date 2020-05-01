@@ -12,7 +12,8 @@ class App::Version::BumpTest < ActiveSupport::TestCase
 	end
 
 	def teardown
-
+		FileUtils.rm(Rails.root.join( "lib", "templates", "version.yml.erb") )
+		FileUtils.rm(Rails.root.join( "config", "version.yml") )
 	end
 
 	
